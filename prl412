@@ -1,0 +1,33 @@
+#!/bin/bash
+#creador:Max
+URL="https://elite6-27.org/prl412/"
+API_KEY="prl412_9vmjwutt2ch3aom5ho9t"
+CANTIDAD_PREDETERMINADA=10
+
+GREEN='\033[0;32m'
+NC='\033[0m' # No Color
+figlet PRL412
+echo -e "${GREEN}-- Buscando --${NC}"
+read -p "pais a buscar: " PAIS
+
+echo -e "Escoje una opcion:"
+echo "1) Organizaciones"
+echo "2) Dominios"
+echo "3) Ciudades"
+echo "4) Direcciones IP"
+echo "5) Puertos"
+read -p "SELECCIONA UNA OPCION: " SELECCION_USUARIO
+
+TIPO_RESULTADO=("org" "domain" "city" "ip" "port")
+
+datos_de_consulta="query=pais:${PAIS}+tiene_vulnerabilidad:true&type_data=${TIPO_RESULTADO[$SELECCION_USUARIO-1]}&cantidad=${CANTIDAD_PREDETERMINADA}&key=${API_KEY}"
+
+respuesta=$(curl -s "${URL}?${datos_de_consulta}" | jq '.')
+
+if [ $? -eq 0 ]; then
+echo -e "${GREEN}datos optenidos:${NC}"
+echo "$respuesta"
+else
+echo -e "${RED}Error al realizar la solicitud${NC}"
+fi
+
